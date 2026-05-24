@@ -1,26 +1,46 @@
+@import url("https://fonts.googleapis.com/css2?family=Geist+Mono:ital,wght@0,100..900;1,100..900&family=IBM+Plex+Sans:ital,wght@0,100..700;1,100..700&display=swap");
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* Main surfaces */
+  --background: #f3eee8;
+  --foreground: #1f1a17;
+
+  /* Brand */
+  --primary: #4b362f;
+  --primary-hover: #3b2a24;
+  --secondary: #6b4f45;
+  --accent: #a67c52;
+
+  /* Neutrals */
+  --dark-neutral: #1f1a17;
+  --light-neutral: #f3eee8;
+  --muted: #e4d8cc;
+  --border: #d6c8ba;
+  --card: #fffaf4;
+
+  /* Fonts */
+  --font-ibm-plex-sans: "IBM Plex Sans", sans-serif;
+  --font-geist-mono: "Geist Mono", monospace;
 }
 
 @theme inline {
+  /* Colors */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-accent: var(--accent);
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  --color-dark-neutral: var(--dark-neutral);
+  --color-light-neutral: var(--light-neutral);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
+
+  /* Fonts */
+  --font-ibm: var(--font-ibm-plex-sans);
+  --font-geist: var(--font-geist-mono);
 }
