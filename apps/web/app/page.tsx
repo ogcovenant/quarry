@@ -4,8 +4,14 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground font-geist">
       <section className="mx-auto max-w-5xl px-6 py-24">
+        <h1 className="flex items-center font-ibm my-10">
+          <Image src="/logo.svg" alt="Quarry logo" width={40} height={40} />
+          <span className="ml-2 text-2xl font-semibold text-primary">
+            Quarry
+          </span>
+        </h1>
         <p className="mb-4 text-sm font-medium text-accent">
-          AI Workspace Infrastructure
+          Your AI Workspace Assistant
         </p>
 
         <h1 className="max-w-3xl text-5xl font-semibold tracking-tight text-primary">
