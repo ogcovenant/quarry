@@ -1,15 +1,11 @@
-import Image from "next/image";
+import Logo from "@/components/logo";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="min-h-screen bg-background text-foreground font-geist">
+    <main className="min-h-screen font-geist">
       <section className="mx-auto max-w-5xl px-6 py-24">
-        <h1 className="flex items-center font-ibm my-10">
-          <Image src="/logo.svg" alt="Quarry logo" width={40} height={40} />
-          <span className="ml-2 text-2xl font-semibold text-primary">
-            Quarry
-          </span>
-        </h1>
+        <Logo />
 
         <p className="mb-4 text-sm font-medium text-accent">
           Your AI assistant that remembers
@@ -26,13 +22,17 @@ export default function Home() {
         </p>
 
         <div className="mt-8 flex gap-4">
-          <button className="rounded-xl px-5 py-3 font-medium text-light-neutral hover:bg-primary-hover bg-linear-to-b from-secondary to-primary-hover shadow-[inset_0_1px_0_0_rgba(0,0,0,0.1)]">
-            Get started
-          </button>
+          <Link href="/auth">
+            <button className="rounded-xl px-5 py-3 font-medium text-light-neutral hover:bg-primary-hover bg-linear-to-b from-secondary to-primary-hover shadow-[inset_0_1px_0_0_rgba(0,0,0,0.1)] cursor-pointer">
+              Get started
+            </button>
+          </Link>
 
-          <button className="rounded-xl border border-border bg-card px-5 py-3 font-medium text-primary hover:bg-muted">
-            View demo
-          </button>
+          <Link href="/demo">
+            <button className="rounded-xl border border-border bg-card px-5 py-3 font-medium text-primary hover:bg-muted cursor-pointer">
+              View demo
+            </button>
+          </Link>
         </div>
       </section>
     </main>
