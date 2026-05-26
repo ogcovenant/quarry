@@ -5,7 +5,9 @@ export default function Home() {
   return (
     <main className="min-h-screen font-geist">
       <section className="mx-auto max-w-5xl px-6 py-24">
-        <Logo />
+        <div className="my-10">
+          <Logo />
+        </div>
 
         <p className="mb-4 text-sm font-medium text-accent">
           Your AI assistant that remembers
