@@ -33,7 +33,7 @@ export default function NotesPage() {
     },
     {
       id: 5,
-      title: "Knowledge Graph Thoughts",
+      title: "Knowledge Graph Thoughts on all open ideas",
       content:
         "Automatic relationship mapping between notes could become a major differentiator. The system should surface connected ideas naturally over time.",
       createdAt: new Date().toISOString(),

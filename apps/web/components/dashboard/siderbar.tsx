@@ -14,7 +14,7 @@ export default function Sidebar() {
     // { label: "Favorites", href: "/dashboard/favorites" },
   ];
 
-  const bottomNavItems = [{ label: "Profile", href: "/profile" }];
+  const bottomNavItems = [{ label: "Profile", href: "/dashboard/profile" }];
 
   return (
     <div className="p-5 border-r-2 border-r-border w-[10%] min-h-screen flex flex-col">
