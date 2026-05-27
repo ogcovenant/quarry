@@ -11,7 +11,7 @@ export default function Sidebar() {
   const navItems = [
     { label: "Chat", href: "/dashboard/chat" },
     { label: "Notes", href: "/dashboard/notes" },
-    { label: "Favorites", href: "/dashboard/favorites" },
+    // { label: "Favorites", href: "/dashboard/favorites" },
   ];
 
   const bottomNavItems = [{ label: "Profile", href: "/profile" }];
