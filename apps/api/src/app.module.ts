@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
+import { LoggerModule } from 'nestjs-pino';
 
 @Module({
   imports: [
@@ -13,6 +14,15 @@ import { UsersModule } from './users/users.module';
         limit: 100,
       },
     ]),
+    LoggerModule.forRoot({
+      pinoHttp: {
+        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
+        transport:
+          process.env.NODE_ENV !== 'production'
+            ? { target: 'pino-pretty' }
+            : undefined,
+      },
+    }),
     AuthModule,
     UsersModule,
   ],

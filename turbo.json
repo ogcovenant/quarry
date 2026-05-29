@@ -1,7 +1,7 @@
 {
   "$schema": "https://turborepo.dev/schema.json",
   "ui": "tui",
-  "globalEnv": ["PORT", "ALLOWED_ORIGINS"],
+  "globalEnv": ["PORT", "ALLOWED_ORIGINS", "NODE_ENV"],
   "tasks": {
     "build": {
       "dependsOn": ["^build"],
