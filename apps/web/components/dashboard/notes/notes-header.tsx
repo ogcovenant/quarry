@@ -1,5 +1,6 @@
 import { NoteAddIcon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
 
 export default function NotesHeader() {
   return (
@@ -7,10 +8,13 @@ export default function NotesHeader() {
       {/*<p className="text-sm font-medium text-accent">Chat</p>*/}
       <h1 className="mt-2 text-xl font-semibold text-primary">Notes</h1>
       <div>
-        <button className="bg-linear-to-b from-secondary to-primary text-white px-4 py-2 rounded cursor-pointer flex items-center gap-2">
+        <Link
+          href="/dashboard/notes/new"
+          className="bg-linear-to-b from-secondary to-primary text-white px-4 py-2 rounded cursor-pointer flex items-center gap-2"
+        >
           <HugeiconsIcon icon={NoteAddIcon} size={20} />
           <span>Add Note</span>
-        </button>
+        </Link>
       </div>
     </header>
   );
