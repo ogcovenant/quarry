@@ -11,7 +11,7 @@ export default function Sidebar() {
   const navItems = [
     { label: "Chat", href: "/dashboard/chat" },
     { label: "Notes", href: "/dashboard/notes" },
-    // { label: "Favorites", href: "/dashboard/favorites" },
+    { label: "Uploads", href: "/dashboard/uploads" },
   ];
 
   const bottomNavItems = [{ label: "Profile", href: "/dashboard/profile" }];
@@ -24,7 +24,8 @@ export default function Sidebar() {
         <section className="mt-10">
           <ul className="space-y-2">
             {navItems.map((item, index) => {
-              const isActive = pathname === item.href;
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
 
               return (
                 <li key={index} className="flex gap-3 items-center">
@@ -40,7 +41,8 @@ export default function Sidebar() {
         <section className="mb-5">
           <ul className="space-y-2">
             {bottomNavItems.map((item, index) => {
-              const isActive = pathname === item.href;
+              const isActive =
+                pathname === item.href || pathname.startsWith(`${item.href}/`);
 
               return (
                 <li key={index} className="flex gap-3 items-center">

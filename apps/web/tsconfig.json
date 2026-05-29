@@ -3,8 +3,8 @@
   "compilerOptions": {
     "incremental": true,
     "paths": {
-      "@/*": ["./*"]
-    }
+      "@/*": ["./*"],
+    },
   },
   "include": [
     "next-env.d.ts",
@@ -12,7 +12,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
-    "**/*.mts"
+    "**/*.mts",
+    "app/dashboard/chat/[id]",
   ],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules"],
 }
