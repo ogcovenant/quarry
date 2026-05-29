@@ -36,7 +36,7 @@ export default function NewNotePage() {
         />
       </div>
 
-      <style jsx global>{`
+      <style>{`
         .quarry-note-editor.bn-container {
           height: 100%;
           min-height: 0;

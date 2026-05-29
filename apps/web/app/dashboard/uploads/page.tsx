@@ -173,7 +173,7 @@ export default function UploadsPage() {
             </span>
             <span className="mt-2 max-w-xl text-sm leading-6 text-secondary">
               Add PDFs, text files, Markdown notes, and research documents to
-              keep Quarry's context close to your workspace.
+              keep Quarry context close to your workspace.
             </span>
           </label>
 
