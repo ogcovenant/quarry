@@ -5,9 +5,13 @@ import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { LoggerModule } from 'nestjs-pino';
+import { AppModuleConfig } from './config/config.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
+    AppModuleConfig,
+    DatabaseModule,
     ThrottlerModule.forRoot([
       {
         ttl: 60000,
