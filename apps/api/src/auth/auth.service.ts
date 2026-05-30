@@ -1,7 +1,7 @@
 import {
   ConflictException,
   Injectable,
-  NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { AuthDto } from './dto/auth.dto';
@@ -40,9 +40,10 @@ export class AuthService {
   async login(body: AuthDto) {
     const { email, password } = body;
 
-    const existingUser = await this.userService.findOneByEmail(email);
+    const existingUser =
+      await this.userService.findOneByEmailWithPassword(email);
     if (!existingUser) {
-      throw new NotFoundException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const isPasswordValid = await this.userService.comparePassword(
@@ -50,7 +51,7 @@ export class AuthService {
       existingUser.password,
     );
     if (!isPasswordValid) {
-      throw new NotFoundException('Invalid credentials');
+      throw new UnauthorizedException('Invalid credentials');
     }
 
     const token = this.jwtService.sign({
