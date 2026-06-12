@@ -1,79 +1,96 @@
-export default function ChatSidebar() {
-  const history = [
-    "Polymint token economics draft",
-    "Rodoh payout routing architecture",
-    "Quarry memory engine ideas",
-    "Inference gateway redesign",
-    "Persistent AI context research",
-    "Notes on AI-native workspaces",
-    "OpenRouter compatibility layer",
-    "Knowledge graph implementation",
-    "Thoughts on second-brain UX",
-    "Voice note transcription flow",
-    "Model monetization strategy",
-    "AI memory ranking system",
-    "Workspace navigation concepts",
-    "Semantic search experiments",
-    "Cross-project relationship mapping",
-    "Gemma deployment notes",
-    "Ideas for autonomous agents",
-    "Markdown editor improvements",
-    "Future of AI operating systems",
-    "AI-assisted writing workflows",
-    "Research on Reflect and Tana",
-    "Quarry onboarding experience",
-    "Graph visualization direction",
-    "Stablecoin settlement logic",
-    "Creator monetization mechanics",
-    "Deep dive into embeddings",
-    "Realtime sync architecture",
-    "Cursor-inspired UI patterns",
-    "Building calm software",
-    "Thoughts on ambient intelligence",
-    "Entity extraction pipeline",
-    "Personal knowledge infrastructure",
-    "Designing persistent memory",
-    "Idea dump for Quarry v2",
-    "AI-generated documentation flow",
-    "RAG vs long-term memory",
-    "Structuring technical research",
-    "Minimal dashboard explorations",
-    "Notes on contextual retrieval",
-    "The future of human-AI thinking",
-  ];
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+
+const conversationGroups = [
+  {
+    label: "Quarry",
+    conversations: [
+      {
+        title: "Product scope and next milestone",
+        href: "/dashboard/chat/project-review",
+      },
+      {
+        title: "Memory ranking approaches",
+        href: "/dashboard/chat/memory-ranking",
+      },
+      {
+        title: "Navigation and workspace model",
+        href: "/dashboard/chat/workspace-navigation",
+      },
+    ],
+  },
+  {
+    label: "Freeform",
+    conversations: [
+      {
+        title: "Thinking system ideas",
+        href: "/dashboard/chat/thinking-system",
+      },
+    ],
+  },
+];
+
+export default function ChatSidebar({
+  mobile = false,
+  onNavigate,
+}: {
+  mobile?: boolean;
+  onNavigate?: () => void;
+}) {
+  const pathname = usePathname();
 
   return (
-    <aside className="h-full w-[280px] border-r border-border bg-background/70 backdrop-blur-xl">
+    <aside
+      className={`${mobile ? "h-full w-72 border-r border-border" : "hidden h-full w-56 lg:block"} shrink-0 bg-surface-subtle`}
+      aria-label="Conversation history"
+    >
       <div className="flex h-full flex-col">
-        {/* Header */}
-        <div className="border-b border-border px-5 py-4">
-          <h2 className="text-sm font-semibold tracking-wide text-primary uppercase">
+        <div className="border-b border-border p-3">
+          <p className="px-2 text-xs font-medium text-secondary">
             Conversations
-          </h2>
-
-          <button className="mt-4 flex w-full items-center justify-center rounded bg-linear-to-b from-secondary to-primary text-white px-4 py-2 text-sm font-medium transition-all hover:bg-foreground/70 cursor-pointer shadow-[inset_8px_12px_16px_2px,rgba(0,0,0,0.4)]">
-            + New Chat
-          </button>
+          </p>
+          <Link
+            href="/dashboard/chat"
+            onClick={onNavigate}
+            className="mt-3 block w-full rounded-md bg-primary px-3 py-2 text-sm font-medium text-white hover:bg-primary-hover"
+          >
+            + New conversation
+          </Link>
         </div>
 
-        {/* Chat History */}
-        <div className="flex-1 overflow-y-auto px-3 py-3">
-          <ul className="space-y-1">
-            {history.map((item, index) => (
-              <li key={index}>
-                <button
-                  className="
-                    flex w-full items-center gap-2 rounded-xl
-                    px-3 py-2.5 text-left text-sm font-medium
-                    transition-colors hover:underline cursor-pointer
-                  "
-                >
-                  <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-primary" />
-                  <span className="truncate">{item}</span>
-                </button>
-              </li>
-            ))}
-          </ul>
+        <div className="flex-1 overflow-y-auto p-3">
+          {conversationGroups.map((group, groupIndex) => (
+            <div key={group.label} className={groupIndex === 0 ? "" : "mt-5"}>
+              <p className="px-2 text-xs font-medium text-secondary">
+                {group.label}
+              </p>
+              <ul className="mt-1 space-y-0.5">
+                {group.conversations.map((conversation) => {
+                  const active = pathname === conversation.href;
+                  return (
+                    <li key={conversation.href}>
+                      <Link
+                        href={conversation.href}
+                        onClick={onNavigate}
+                        aria-current={active ? "page" : undefined}
+                        className={`block rounded-md px-2 py-2 text-xs leading-5 ${
+                          active
+                            ? "bg-muted font-medium text-foreground"
+                            : "text-secondary hover:bg-muted/60 hover:text-foreground"
+                        }`}
+                      >
+                        <span className="block truncate">
+                          {conversation.title}
+                        </span>
+                      </Link>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          ))}
         </div>
       </div>
     </aside>

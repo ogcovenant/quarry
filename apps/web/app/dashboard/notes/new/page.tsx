@@ -1,72 +1,55 @@
 "use client";
 
-import "@blocknote/core/fonts/inter.css";
-import { BlockNoteView } from "@blocknote/mantine";
-import "@blocknote/mantine/style.css";
-import { useCreateBlockNote } from "@blocknote/react";
 import Link from "next/link";
-import { noteTheme } from "@/lib/note-theme";
+import dynamic from "next/dynamic";
+import { projects } from "@/lib/workspace-data";
+
+const NoteEditor = dynamic(
+  () => import("@/components/dashboard/notes/note-editor"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="h-full w-full animate-pulse rounded-lg border border-border bg-card" />
+    ),
+  },
+);
 
 export default function NewNotePage() {
-  const editor = useCreateBlockNote();
-
   return (
-    <section className="flex h-screen min-w-0 flex-col overflow-hidden bg-background">
-      <header className="flex shrink-0 items-center justify-between border-b border-border px-8 py-4">
+    <section className="flex h-[calc(100vh-4rem)] min-w-0 flex-col overflow-hidden bg-background md:h-screen">
+      <header className="flex shrink-0 items-center justify-between border-b border-border px-5 py-3 sm:px-8">
         <div>
-          <p className="text-sm font-medium text-accent">Notes</p>
-          <h1 className="mt-1 text-xl font-semibold text-primary">
+          <p className="text-xs text-secondary">Notes</p>
+          <h1 className="mt-1 text-xl font-semibold text-foreground">
             Create note
           </h1>
         </div>
 
-        <Link
-          href="/dashboard/notes"
-          className="rounded-lg border border-border bg-card px-4 py-2 text-sm font-medium text-secondary transition-colors hover:border-accent hover:text-primary"
-        >
-          Back to notes
-        </Link>
+        <div className="flex items-center gap-2">
+          <select
+            defaultValue="freeform"
+            aria-label="Note scope"
+            className="hidden h-9 rounded-md border border-border bg-card px-3 text-xs text-secondary outline-none focus:border-secondary sm:block"
+          >
+            <option value="freeform">Freeform note</option>
+            {projects.map((project) => (
+              <option key={project.id} value={project.id}>
+                {project.name} project
+              </option>
+            ))}
+          </select>
+          <Link
+            href="/dashboard/notes"
+            className="rounded-md px-3 py-2 text-sm text-secondary hover:bg-muted hover:text-foreground"
+          >
+            Back to notes
+          </Link>
+        </div>
       </header>
 
-      <div className="min-h-0 flex-1 p-6">
-        <BlockNoteView
-          editor={editor}
-          theme={noteTheme.light}
-          className="quarry-note-editor h-full w-full overflow-hidden rounded-lg border border-border bg-card shadow-sm"
-        />
+      <div className="min-h-0 flex-1 p-4 sm:p-6">
+        <NoteEditor />
       </div>
-
-      <style>{`
-        .quarry-note-editor.bn-container {
-          height: 100%;
-          min-height: 0;
-          overflow: hidden;
-          width: 100%;
-          background: #fffaf4;
-        }
-
-        .quarry-note-editor .bn-editor {
-          box-sizing: border-box;
-          display: block;
-          height: 100%;
-          min-height: 100%;
-          max-width: none;
-          overflow-y: auto;
-          padding: 48px clamp(24px, 5vw, 72px);
-          width: 100% !important;
-        }
-
-        .quarry-note-editor .ProseMirror {
-          min-height: 100%;
-          width: 100%;
-        }
-
-        @media (max-width: 768px) {
-          .quarry-note-editor .bn-editor {
-            padding: 28px 20px;
-          }
-        }
-      `}</style>
     </section>
   );
 }

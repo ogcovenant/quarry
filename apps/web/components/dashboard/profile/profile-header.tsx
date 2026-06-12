@@ -3,15 +3,22 @@ import { HugeiconsIcon } from "@hugeicons/react";
 
 export default function ProfileHeader() {
   return (
-    <header className="border-b border-border px-8 py-4 flex justify-between items-center">
-      {/*<p className="text-sm font-medium text-accent">Chat</p>*/}
-      <h1 className="mt-2 text-xl font-semibold text-primary">Profile</h1>
+    <header className="flex flex-col items-start justify-between gap-6 sm:flex-row">
       <div>
-        <button className="bg-linear-to-b from-red-700 to-red-800 text-white px-4 py-2 rounded cursor-pointer flex items-center gap-2">
-          <HugeiconsIcon icon={Login01Icon} size={20} />
-          <span>Log out</span>
-        </button>
+        <h1 className="text-4xl font-semibold tracking-tight text-foreground">
+          Settings
+        </h1>
+        <p className="mt-3 text-sm text-secondary">
+          Manage your account and workspace preferences.
+        </p>
       </div>
+      <button
+        type="button"
+        className="mt-1 inline-flex shrink-0 items-center gap-2 rounded-md border border-border px-3 py-2 text-sm text-secondary hover:border-red-200 hover:bg-red-50 hover:text-red-700"
+      >
+        <HugeiconsIcon icon={Login01Icon} size={16} strokeWidth={1.7} />
+        Log out
+      </button>
     </header>
   );
 }

@@ -1,130 +1,136 @@
-import { SentIcon } from "@hugeicons/core-free-icons";
-import { HugeiconsIcon } from "@hugeicons/react";
-import TextareaAutosize from "react-textarea-autosize";
+"use client";
 
-const messages = [
-  {
-    author: "Quarry",
-    text: "What should we remember or work through today?",
-  },
-  {
-    author: "You",
-    text: "Help me connect my project notes with the decisions from last week.",
-  },
-  {
-    author: "Quarry",
-    text: "I can do that. Add the notes or describe the project, and I will keep the context together as we go.",
-  },
-  {
-    author: "You",
-    text: "I also want the system to surface related ideas automatically over time.",
-  },
-  {
-    author: "Quarry",
-    text: "That could evolve naturally through semantic linking and persistent workspace memory.",
-  },
-  {
-    author: "You",
-    text: "For now, I want Quarry to stay personal-first, not team-focused.",
-  },
-  {
-    author: "Quarry",
-    text: "Then the first version should focus on private notes, quick capture, contextual chat, and a calm writing experience.",
-  },
-  {
-    author: "You",
-    text: "The dashboard should feel minimal, like a place to think, not a full SaaS control panel.",
-  },
-  {
-    author: "Quarry",
-    text: "A simple notes area, chat history, and expandable input is enough for the first version.",
-  },
-  {
-    author: "You",
-    text: "I want the AI responses to feel more like notes than a person talking back.",
-  },
-  {
-    author: "Quarry",
-    text: "The response style can stay neutral and document-like, with clean note cards instead of avatar bubbles.",
-  },
-  {
-    author: "You",
-    text: "Later, I may add semantic search and automatic connections between notes.",
-  },
-  {
-    author: "Quarry",
-    text: "That can become the intelligence layer after the core writing and chat experience feels solid.",
-  },
-];
+import ChatComposer from "./chat-composer";
+import {
+  CheckmarkCircle02Icon,
+  Edit02Icon,
+  Folder01Icon,
+  Note01Icon,
+} from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
+import { useState } from "react";
 
 export default function ChatPage() {
-  return (
-    <section className="flex h-full flex-1 flex-col py-6">
-      {/* Messages */}
-      <div className="w-full overflow-y-auto">
-        <div className="mx-auto flex w-full max-w-3xl flex-1 flex-col gap-6 pb-6">
-          {messages.map((message) => {
-            const isQuarry = message.author === "Quarry";
+  const [updateApplied, setUpdateApplied] = useState(false);
 
-            return (
-              <article
-                key={`${message.author}-${message.text}`}
-                className={isQuarry ? "w-full" : "flex justify-end"}
-              >
-                {isQuarry ? (
-                  <div className="rounded-2xl border border-border bg-card/70 px-5 py-4">
-                    <p className="text-sm leading-7 text-foreground">
-                      {message.text}
+  return (
+    <div className="flex h-full min-h-0">
+      <section className="flex min-w-0 flex-1 flex-col">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          <div className="mx-auto max-w-2xl px-6 py-10 sm:px-10">
+            <div className="flex items-center gap-2 text-xs text-secondary">
+              <HugeiconsIcon icon={Folder01Icon} size={14} strokeWidth={1.7} />
+              <span>Quarry</span>
+              <span>·</span>
+              <span>5 notes and 2 sources</span>
+            </div>
+            <div className="mt-8 flex justify-end">
+              <p className="max-w-[85%] rounded-lg bg-muted px-3 py-2 text-sm leading-6 text-foreground">
+                Review the current product direction, add project scoping, and
+                turn the result into a product brief note.
+              </p>
+            </div>
+
+            <div className="mt-8 space-y-6">
+              <div>
+                <p className="text-sm leading-7 text-foreground">
+                  The current direction is strong, but the information model
+                  needs one explicit layer between the workspace and individual
+                  items: <strong>projects</strong>. Projects should own their
+                  notes, sources, and conversations, while freeform notes remain
+                  available at workspace level.
+                </p>
+                <div className="mt-3 flex gap-2 text-xs text-secondary">
+                  <span>Quarry Product Direction</span>
+                  <span>·</span>
+                  <span>AI workspace research.md</span>
+                </div>
+              </div>
+
+              <div className="border-l-2 border-accent pl-4">
+                <div className="flex items-center gap-2">
+                  <HugeiconsIcon
+                    icon={Edit02Icon}
+                    size={16}
+                    strokeWidth={1.7}
+                    className="text-accent"
+                  />
+                  <p className="text-sm font-medium text-foreground">
+                    Update Quarry Product Direction
+                  </p>
+                </div>
+                <p className="mt-2 text-sm leading-6 text-secondary">
+                  <strong className="font-medium text-foreground">
+                    Add “Project scoping”:
+                  </strong>{" "}
+                  Projects are durable containers for active work. Every project
+                  keeps its notes, sources, and chats together. Notes may also
+                  remain freeform.
+                </p>
+                <div className="mt-3 flex items-center gap-2">
+                  {updateApplied ? (
+                    <span className="inline-flex items-center gap-1.5 text-xs text-accent">
+                      <HugeiconsIcon
+                        icon={CheckmarkCircle02Icon}
+                        size={15}
+                        strokeWidth={1.7}
+                      />
+                      Applied
+                    </span>
+                  ) : (
+                    <>
+                      <button
+                        type="button"
+                        onClick={() => setUpdateApplied(true)}
+                        className="rounded-md bg-primary px-2.5 py-1.5 text-xs font-medium text-white"
+                      >
+                        Apply
+                      </button>
+                      <button
+                        type="button"
+                        className="rounded-md px-2.5 py-1.5 text-xs text-secondary hover:bg-muted"
+                      >
+                        Dismiss
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div>
+                <p className="text-sm leading-7 text-foreground">
+                  I also created a brief note from the revised direction.
+                </p>
+                <Link
+                  href="/dashboard/notes/quarry-product-brief"
+                  className="mt-3 flex items-center gap-3 border-y border-border py-3 hover:bg-muted/40"
+                >
+                  <HugeiconsIcon
+                    icon={Note01Icon}
+                    size={18}
+                    strokeWidth={1.7}
+                    className="text-secondary"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-medium text-foreground">
+                      Quarry v2 Product Brief
+                    </p>
+                    <p className="mt-0.5 text-xs text-secondary">
+                      Brief note · Quarry project · created from this chat
                     </p>
                   </div>
-                ) : (
-                  <div className="max-w-[80%] rounded-2xl bg-primary px-4 py-3 text-light-neutral">
-                    <p className="text-sm leading-6">{message.text}</p>
-                  </div>
-                )}
-              </article>
-            );
-          })}
+                </Link>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-
-      {/* Input */}
-      <form className="mx-auto mt-4 w-full max-w-3xl">
-        <label htmlFor="message" className="sr-only">
-          Message
-        </label>
-
-        <div
-          className="
-            flex items-end gap-2 rounded-2xl border border-border
-            bg-card px-3 py-3
-            transition-colors focus-within:border-accent
-          "
-        >
-          <TextareaAutosize
-            id="message"
-            minRows={1}
-            maxRows={10}
-            placeholder="Ask anything..."
-            className="
-              max-h-40 flex-1 resize-none bg-transparent
-              px-1 py-1 text-sm text-foreground
-              outline-none placeholder:text-secondary/60
-            "
-          />
-
-          <button
-            type="submit"
-            className="
-              flex h-10 w-10 shrink-0 items-center justify-center
-              rounded-xl bg-primary text-light-neutral
-              transition-all hover:opacity-90
-            "
-          >
-            <HugeiconsIcon icon={SentIcon} size={18} strokeWidth={1.8} />
-          </button>
+        <div className="border-t border-border bg-card px-4 py-3">
+          <div className="mx-auto max-w-2xl">
+            <ChatComposer compact />
+          </div>
         </div>
-      </form>
-    </section>
+      </section>
+    </div>
   );
 }

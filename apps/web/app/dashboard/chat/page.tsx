@@ -1,52 +1,57 @@
 "use client";
 
-import { SentIcon } from "@hugeicons/core-free-icons";
+import ChatComposer from "@/components/dashboard/chat/chat-composer";
+import { ArrowRight01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
-import TextareaAutosize from "react-textarea-autosize";
+import { useRouter } from "next/navigation";
+
+const prompts = [
+  "Review the Quarry project and propose the next milestone",
+  "Update the product direction note with project scoping",
+  "Create a product brief note from the selected context",
+];
 
 export default function DashboardChatPage() {
+  const router = useRouter();
   return (
-    <div className="flex h-full w-full flex-1 items-center justify-center overflow-auto px-6">
-      <div className="w-full max-w-2xl text-center">
-        <h1 className="text-4xl font-bold tracking-tight text-foreground">
-          Hello 👋
+    <div className="flex h-full overflow-y-auto">
+      <div className="mx-auto my-auto w-full max-w-2xl px-6 py-12 sm:px-10">
+        <h1 className="text-3xl font-semibold tracking-tight text-foreground">
+          Ask Quarry
         </h1>
-
-        <p className="mt-4 text-sm leading-7 text-secondary">
-          What should we think through today?
+        <p className="mt-2 text-sm leading-6 text-secondary">
+          Select a project, note, or source as context. Quarry can answer
+          questions and propose note changes for review.
         </p>
-
-        <form className="mt-8">
-          <div
-            className="
-              flex items-end gap-2 rounded-2xl border border-border
-              bg-card px-3 py-3
-              transition-colors focus-within:border-accent
-            "
-          >
-            <TextareaAutosize
-              minRows={1}
-              maxRows={8}
-              placeholder="Ask anything..."
-              className="
-                max-h-40 flex-1 resize-none bg-transparent
-                px-1 py-1 text-sm text-foreground
-                outline-none placeholder:text-secondary/60
-              "
-            />
-
-            <button
-              type="submit"
-              className="
-                flex h-10 w-10 shrink-0 items-center justify-center
-                rounded-xl bg-primary text-light-neutral
-                transition-all hover:opacity-90
-              "
-            >
-              <HugeiconsIcon icon={SentIcon} size={18} strokeWidth={1.8} />
-            </button>
+        <div className="mt-8">
+          <ChatComposer
+            onSubmit={() => router.push("/dashboard/chat/project-review")}
+          />
+        </div>
+        <div className="mt-8">
+          <p className="text-xs font-medium text-secondary">Try asking</p>
+          <div className="mt-2 border-t border-border">
+            {prompts.map((prompt) => (
+              <button
+                key={prompt}
+                type="button"
+                onClick={() => router.push("/dashboard/chat/project-review")}
+                className="flex w-full items-center gap-3 border-b border-border py-3 text-left text-sm text-secondary hover:bg-muted/40 hover:text-foreground"
+              >
+                <span className="flex-1">{prompt}</span>
+                <HugeiconsIcon
+                  icon={ArrowRight01Icon}
+                  size={14}
+                  strokeWidth={1.7}
+                />
+              </button>
+            ))}
           </div>
-        </form>
+        </div>
+        <p className="mt-6 text-xs text-secondary">
+          Creates and updates require review. Deletes always require
+          confirmation.
+        </p>
       </div>
     </div>
   );

@@ -1,13 +1,34 @@
-export default function ChatHeader() {
+import { Menu01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
+
+export default function ChatHeader({
+  onHistoryClick,
+}: {
+  onHistoryClick: () => void;
+}) {
   return (
-    <header className="border-b border-border px-8 py-4 flex justify-between items-center">
-      {/*<p className="text-sm font-medium text-accent">Chat</p>*/}
-      <h1 className="mt-2 text-xl font-semibold text-primary">Chat</h1>
-      {/*<div>
-        <button className="bg-linear-to-b from-secondary to-primary text-white px-4 py-2 rounded cursor-pointer">
-          New Chat
+    <header className="flex h-12 shrink-0 items-center justify-between border-b border-border px-4 sm:px-6">
+      <div className="flex items-center gap-2">
+        <button
+          type="button"
+          onClick={onHistoryClick}
+          className="inline-flex items-center gap-1.5 rounded-md px-2 py-1.5 text-sm text-secondary hover:bg-muted hover:text-foreground lg:hidden"
+          aria-label="Open conversation history"
+        >
+          <HugeiconsIcon icon={Menu01Icon} size={16} strokeWidth={1.7} />
+          History
         </button>
-      </div>*/}
+        <Link
+          href="/dashboard/chat"
+          className="hidden text-sm font-medium text-foreground sm:block"
+        >
+          Ask
+        </Link>
+      </div>
+      <span className="hidden text-xs text-secondary sm:block">
+        Changes are reviewed before applying
+      </span>
     </header>
   );
 }

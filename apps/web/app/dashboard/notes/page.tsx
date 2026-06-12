@@ -1,73 +1,93 @@
+"use client";
+
 import NoteSingle from "@/components/dashboard/notes/note-single";
-import NotesHeader from "@/components/dashboard/notes/notes-header";
+import { projects, workspaceNotes } from "@/lib/workspace-data";
+import { NoteAddIcon, Search01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+
+const scopes = ["All", "Freeform", ...projects.map((project) => project.name)];
 
 export default function NotesPage() {
-  const notes = [
-    {
-      id: 1,
-      title: "Polymint AI Monetization Ideas",
-      content:
-        "Explored revenue-sharing mechanisms for model creators. Considering an 80/20 split where creators retain most inference revenue while the platform captures usage fees and token ecosystem value.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 2,
-      title: "Quarry Product Direction",
-      content:
-        "Quarry should feel less like a chatbot and more like an AI-native thinking environment. Focus on persistent memory, connected notes, and contextual intelligence rather than personalities or assistants.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 3,
-      title: "Rodoh Treasury Notes",
-      content:
-        "Need a stablecoin settlement layer that can support cross-border payouts. Explore combining local collection providers with automated stablecoin routing infrastructure.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 4,
-      title: "AI Workspace Research",
-      content:
-        "Most AI workspaces feel overloaded too early. Simplicity and writing experience should come before collaboration, agents, or complex workflows.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 5,
-      title: "Knowledge Graph Thoughts on all open ideas",
-      content:
-        "Automatic relationship mapping between notes could become a major differentiator. The system should surface connected ideas naturally over time.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 6,
-      title: "UI Direction for Quarry",
-      content:
-        "Warm dark tones feel more human and thoughtful compared to typical AI products. Brown, graphite, and muted bronze create a calmer workspace atmosphere.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 7,
-      title: "Open Questions About Memory",
-      content:
-        "How should long-term memory ranking work? Need a balance between recency, relevance, and semantic importance without overwhelming the user.",
-      createdAt: new Date().toISOString(),
-    },
-    {
-      id: 8,
-      title: "Future Features",
-      content:
-        "Voice capture, semantic search, AI-generated summaries, and contextual linking could all evolve naturally from the current notes foundation.",
-      createdAt: new Date().toISOString(),
-    },
-  ];
+  const [query, setQuery] = useState("");
+  const [scope, setScope] = useState("All");
+  const filteredNotes = useMemo(
+    () =>
+      workspaceNotes.filter((note) => {
+        const project = projects.find((item) => item.id === note.projectId);
+        const matchesScope =
+          scope === "All" ||
+          (scope === "Freeform" ? !note.projectId : project?.name === scope);
+        return (
+          matchesScope &&
+          `${note.title} ${note.excerpt}`
+            .toLowerCase()
+            .includes(query.trim().toLowerCase())
+        );
+      }),
+    [scope, query],
+  );
 
   return (
-    <div>
-      <NotesHeader />
-      <div className="flex flex-wrap gap-6 p-8">
-        {notes.map((note) => (
-          <NoteSingle key={note.id} {...note} />
-        ))}
+    <div className="min-h-screen">
+      <div className="mx-auto w-full max-w-4xl px-6 py-12 sm:px-10 sm:py-16">
+        <div className="flex items-start justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-semibold tracking-tight text-foreground">
+              Notes
+            </h1>
+            <p className="mt-3 text-sm text-secondary">
+              Project notes and freeform thinking in one place.
+            </p>
+          </div>
+          <Link
+            href="/dashboard/notes/new"
+            className="inline-flex shrink-0 items-center gap-2 rounded-md bg-primary px-3 py-2 text-sm font-medium text-white"
+          >
+            <HugeiconsIcon icon={NoteAddIcon} size={16} strokeWidth={1.7} />
+            New
+          </Link>
+        </div>
+        <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
+          <label className="relative block flex-1">
+            <HugeiconsIcon
+              icon={Search01Icon}
+              size={17}
+              strokeWidth={1.7}
+              className="pointer-events-none absolute left-2.5 top-1/2 -translate-y-1/2 text-secondary"
+            />
+            <input
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search notes"
+              className="h-9 w-full rounded-md border border-border pl-8 pr-3 text-sm outline-none focus:border-secondary"
+            />
+          </label>
+          <select
+            value={scope}
+            onChange={(event) => setScope(event.target.value)}
+            className="h-9 rounded-md border border-border bg-card px-3 text-sm text-secondary outline-none focus:border-secondary"
+          >
+            {scopes.map((item) => (
+              <option key={item}>{item}</option>
+            ))}
+          </select>
+        </div>
+        <div className="mt-7 flex items-center justify-between">
+          <h2 className="text-sm font-semibold text-foreground">All notes</h2>
+          <span className="text-xs text-secondary">{filteredNotes.length}</span>
+        </div>
+        <div className="mt-2 border-t border-border">
+          {filteredNotes.map((note) => (
+            <NoteSingle key={note.id} {...note} />
+          ))}
+          {filteredNotes.length === 0 && (
+            <p className="py-12 text-center text-sm text-secondary">
+              No notes found.
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

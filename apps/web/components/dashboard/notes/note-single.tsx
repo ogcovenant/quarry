@@ -1,44 +1,48 @@
+import { getProject } from "@/lib/workspace-data";
+import { Note01Icon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
+import Link from "next/link";
+
 interface NoteSingleProps {
-  id: number;
+  id: string;
   title: string;
-  content: string;
-  createdAt: string;
+  excerpt: string;
+  updatedAt: string;
+  category: string;
+  projectId: string | null;
+  compact?: boolean;
 }
 
 export default function NoteSingle({
+  id,
   title,
-  content,
-  createdAt,
+  excerpt,
+  updatedAt,
+  category,
+  projectId,
 }: NoteSingleProps) {
+  const project = getProject(projectId);
   return (
-    <article
-      className="
-        w-[300px] rounded-2xl border border-border
-        bg-card/80 p-5 transition-all duration-200
-        hover:-translate-y-1 hover:border-accent/40
-        hover:bg-card cursor-pointer  flex flex-col justify-between
-      "
+    <Link
+      href={`/dashboard/notes/${id}`}
+      className="flex items-start gap-3 border-b border-border py-4 hover:bg-muted/40"
     >
-      <div>
-        <h2 className="line-clamp-2 text-lg font-semibold text-foreground">
-          {title}
-        </h2>
-
-        <p
-          className="
-            mt-3 line-clamp-5 text-sm leading-7
-            text-secondary
-          "
-        >
-          {content}
+      <HugeiconsIcon
+        icon={Note01Icon}
+        size={18}
+        strokeWidth={1.7}
+        className="mt-0.5 shrink-0 text-secondary"
+      />
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+          <h2 className="text-sm font-medium text-foreground">{title}</h2>
+          <span className="text-xs text-secondary">{category}</span>
+        </div>
+        <p className="mt-1 line-clamp-1 text-sm text-secondary">{excerpt}</p>
+        <p className="mt-1.5 text-xs text-secondary/80">
+          {project?.name ?? "Freeform"} · {updatedAt}
         </p>
       </div>
-
-      <div className="mt-6 border-t border-border pt-3">
-        <p className="text-xs text-secondary/70">
-          {new Date(createdAt).toLocaleDateString()}
-        </p>
-      </div>
-    </article>
+    </Link>
   );
 }

@@ -7,36 +7,36 @@ import {
 const lightNoteTheme = {
   colors: {
     editor: {
-      text: "#1f1a17",
-      background: "#fffaf4",
+      text: "var(--foreground)",
+      background: "var(--card)",
     },
     menu: {
-      text: "#1f1a17",
-      background: "#fffaf4",
+      text: "var(--foreground)",
+      background: "var(--card)",
     },
     tooltip: {
-      text: "#fffaf4",
-      background: "#4b362f",
+      text: "var(--light-neutral)",
+      background: "var(--primary)",
     },
     hovered: {
-      text: "#1f1a17",
-      background: "#e4d8cc",
+      text: "var(--foreground)",
+      background: "var(--muted)",
     },
     selected: {
-      text: "#fffaf4",
-      background: "#6b4f45",
+      text: "var(--light-neutral)",
+      background: "var(--primary)",
     },
     disabled: {
-      text: "#8a7b70",
-      background: "#e4d8cc",
+      text: "var(--secondary)",
+      background: "var(--muted)",
     },
-    shadow: "#d6c8ba",
-    border: "#d6c8ba",
-    sideMenu: "#6b4f45",
+    shadow: "var(--border)",
+    border: "var(--border)",
+    sideMenu: "var(--secondary)",
     highlights: lightDefaultTheme.colors!.highlights,
   },
-  borderRadius: 8,
-  fontFamily: '"IBM Plex Sans", sans-serif',
+  borderRadius: 6,
+  fontFamily: 'var(--font-geist-sans), Arial, sans-serif',
 } satisfies Theme;
 
 const darkNoteTheme = {
@@ -44,32 +44,32 @@ const darkNoteTheme = {
   colors: {
     ...lightNoteTheme.colors,
     editor: {
-      text: "#f3eee8",
-      background: "#1f1a17",
+      text: "#f7f6f3",
+      background: "#2f2e2a",
     },
     menu: {
-      text: "#f3eee8",
-      background: "#2b221e",
+      text: "#f7f6f3",
+      background: "#37352f",
     },
     tooltip: {
-      text: "#1f1a17",
-      background: "#d6c8ba",
+      text: "#37352f",
+      background: "#f1f1ef",
     },
     hovered: {
-      text: "#f3eee8",
-      background: "#4b362f",
+      text: "#f7f6f3",
+      background: "#45433e",
     },
     selected: {
-      text: "#1f1a17",
-      background: "#a67c52",
+      text: "#ffffff",
+      background: "#9a6b45",
     },
     disabled: {
-      text: "#8a7b70",
-      background: "#3b2a24",
+      text: "#9b9995",
+      background: "#45433e",
     },
-    shadow: "#120f0d",
-    border: "#4b362f",
-    sideMenu: "#d6c8ba",
+    shadow: "#1f1e1b",
+    border: "#55524c",
+    sideMenu: "#c7c5c1",
     highlights: darkDefaultTheme.colors!.highlights,
   },
 } satisfies Theme;
