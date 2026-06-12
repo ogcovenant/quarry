@@ -1,4 +1,7 @@
+"use client";
+
 import {
+  Add01Icon,
   AiChat02Icon,
   ArrowRight01Icon,
   CloudUploadIcon,
@@ -8,7 +11,7 @@ import {
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
-import { projects } from "@/lib/workspace-data";
+import { useWorkspaceProjects } from "@/hooks/use-workspace-projects";
 
 const recentItems = [
   {
@@ -38,6 +41,7 @@ const recentItems = [
 ];
 
 export default function DashboardPage() {
+  const { projects } = useWorkspaceProjects();
   return (
     <div className="min-h-screen">
       <div className="mx-auto w-full max-w-4xl px-6 py-12 sm:px-10 sm:py-16">
@@ -66,11 +70,11 @@ export default function DashboardPage() {
             New note
           </Link>
           <Link
-            href="/dashboard/projects"
+            href="/dashboard/projects/new"
             className="inline-flex items-center gap-2 rounded-md px-3 py-2 text-sm text-secondary hover:bg-muted"
           >
-            <HugeiconsIcon icon={Folder01Icon} size={16} strokeWidth={1.7} />
-            Projects
+            <HugeiconsIcon icon={Add01Icon} size={16} strokeWidth={1.7} />
+            New project
           </Link>
           <Link
             href="/dashboard/uploads"

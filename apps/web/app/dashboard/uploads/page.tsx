@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  projects,
   workspaceSources,
   type WorkspaceSource,
 } from "@/lib/workspace-data";
@@ -12,6 +11,7 @@ import {
   Search01Icon,
 } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { useWorkspaceProjects } from "@/hooks/use-workspace-projects";
 import { ChangeEvent, DragEvent, useMemo, useState } from "react";
 
 function formatFileSize(size: number) {
@@ -24,6 +24,7 @@ function getFileType(file: File) {
 }
 
 export default function UploadsPage() {
+  const { projects } = useWorkspaceProjects();
   const [uploads, setUploads] = useState<WorkspaceSource[]>(workspaceSources);
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("all");

@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import dynamic from "next/dynamic";
-import { projects } from "@/lib/workspace-data";
+import { useWorkspaceProjects } from "@/hooks/use-workspace-projects";
 
 const NoteEditor = dynamic(
   () => import("@/components/dashboard/notes/note-editor"),
@@ -15,6 +15,7 @@ const NoteEditor = dynamic(
 );
 
 export default function NewNotePage() {
+  const { projects } = useWorkspaceProjects();
   return (
     <section className="flex h-[calc(100vh-4rem)] min-w-0 flex-col overflow-hidden bg-background md:h-screen">
       <header className="flex shrink-0 items-center justify-between border-b border-border px-5 py-3 sm:px-8">

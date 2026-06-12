@@ -1,15 +1,16 @@
 "use client";
 
 import NoteSingle from "@/components/dashboard/notes/note-single";
-import { projects, workspaceNotes } from "@/lib/workspace-data";
+import { workspaceNotes } from "@/lib/workspace-data";
+import { useWorkspaceProjects } from "@/hooks/use-workspace-projects";
 import { NoteAddIcon, Search01Icon } from "@hugeicons/core-free-icons";
 import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
-const scopes = ["All", "Freeform", ...projects.map((project) => project.name)];
-
 export default function NotesPage() {
+  const { projects } = useWorkspaceProjects();
+  const scopes = ["All", "Freeform", ...projects.map((project) => project.name)];
   const [query, setQuery] = useState("");
   const [scope, setScope] = useState("All");
   const filteredNotes = useMemo(
@@ -26,7 +27,7 @@ export default function NotesPage() {
             .includes(query.trim().toLowerCase())
         );
       }),
-    [scope, query],
+    [scope, query, projects],
   );
 
   return (

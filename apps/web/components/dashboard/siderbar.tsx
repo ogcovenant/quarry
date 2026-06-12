@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Add01Icon,
   AiChat02Icon,
   CloudUploadIcon,
   Folder01Icon,
@@ -12,6 +13,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Logo from "../logo";
+import { useWorkspaceProjects } from "@/hooks/use-workspace-projects";
 
 const navItems = [
   { label: "Home", href: "/dashboard", icon: Home01Icon, exact: true },
@@ -20,14 +22,9 @@ const navItems = [
   { label: "Sources", href: "/dashboard/uploads", icon: CloudUploadIcon },
 ];
 
-const projectItems = [
-  { label: "Quarry", href: "/dashboard/projects/quarry" },
-  { label: "Rodoh", href: "/dashboard/projects/rodoh" },
-  { label: "Polymint", href: "/dashboard/projects/polymint" },
-];
-
 export default function Sidebar() {
   const pathname = usePathname();
+  const { projects } = useWorkspaceProjects();
 
   return (
     <aside className="fixed inset-x-0 bottom-0 z-50 flex h-14 border-t border-border bg-sidebar px-2 md:sticky md:top-0 md:h-screen md:w-60 md:shrink-0 md:flex-col md:border-t-0 md:px-2 md:py-3">
@@ -58,20 +55,30 @@ export default function Sidebar() {
       <div className="hidden md:block">
         <div className="mb-1 mt-5 flex items-center justify-between px-2">
           <p className="text-xs font-medium text-secondary">Projects</p>
-          <Link
-            href="/dashboard/projects"
-            className="text-xs text-secondary hover:text-foreground"
-          >
-            View all
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/dashboard/projects/new"
+              aria-label="Create project"
+              className="rounded p-0.5 text-secondary hover:bg-black/[0.04] hover:text-foreground"
+            >
+              <HugeiconsIcon icon={Add01Icon} size={14} strokeWidth={1.7} />
+            </Link>
+            <Link
+              href="/dashboard/projects"
+              className="text-xs text-secondary hover:text-foreground"
+            >
+              View all
+            </Link>
+          </div>
         </div>
         <ul className="space-y-0.5">
-          {projectItems.map((project) => {
-            const active = pathname === project.href;
+          {projects.map((project) => {
+            const href = `/dashboard/projects/${project.id}`;
+            const active = pathname === href;
             return (
-              <li key={project.href}>
+              <li key={project.id}>
                 <Link
-                  href={project.href}
+                  href={href}
                   className={`flex items-center gap-2 rounded-md px-2.5 py-1.5 text-sm ${active ? "bg-black/[0.07] font-medium text-foreground" : "text-secondary hover:bg-black/[0.04] hover:text-foreground"}`}
                 >
                   <HugeiconsIcon
@@ -79,7 +86,7 @@ export default function Sidebar() {
                     size={16}
                     strokeWidth={1.7}
                   />
-                  <span className="truncate">{project.label}</span>
+                  <span className="truncate">{project.name}</span>
                 </Link>
               </li>
             );

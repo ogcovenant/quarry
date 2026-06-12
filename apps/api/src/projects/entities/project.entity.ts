@@ -7,8 +7,8 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 
-@Entity('users')
-export class User {
+@Entity('projects')
+export class Projects {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -16,11 +16,11 @@ export class User {
   @Generated('uuid')
   uuid!: string;
 
-  @Column({ unique: true })
-  email!: string;
+  @Column({ nullable: false })
+  name!: string;
 
-  @Column({ select: false })
-  password!: string;
+  @Column({ nullable: true })
+  description!: string;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
