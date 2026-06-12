@@ -1,8 +1,11 @@
+import { User } from '../../users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
   Entity,
   Generated,
+  JoinColumn,
+  ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -19,8 +22,15 @@ export class Projects {
   @Column({ nullable: false })
   name!: string;
 
-  @Column({ nullable: true })
-  description!: string;
+  @Column({ type: 'text', nullable: true })
+  description!: string | null;
+
+  @ManyToOne(() => User, (user) => user.projects, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

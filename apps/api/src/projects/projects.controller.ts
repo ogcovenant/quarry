@@ -1,13 +1,21 @@
 import {
+  Body,
   Controller,
   Delete,
   Get,
+  Param,
   Patch,
   Post,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { ProjectsService } from './projects.service';
+import { CreateProjectDto } from './dto/create-project.dto';
+import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
+import { type AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
+import { PaginationQueryDto } from '../common/pagination/dto/pagination-query.dto';
+import { UpdateProjectDto } from './dto/update-project.dto';
 
 @UseGuards(JwtAuthGuard)
 @Controller('projects')
@@ -15,17 +23,43 @@ export class ProjectsController {
   constructor(private readonly projectService: ProjectsService) {}
 
   @Post('/')
-  async createProject() {}
+  async createProject(
+    @Body() body: CreateProjectDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.projectService.createProject(body, user);
+  }
 
   @Get('/')
-  async getAllProjects() {}
+  async getAllProjects(
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() query: PaginationQueryDto,
+  ) {
+    return this.projectService.getAllProjects(user.id, query);
+  }
 
-  @Get('/:id')
-  async getSingleProject() {}
+  @Get('/:uuid')
+  async getSingleProject(
+    @Param('uuid') uuid: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.projectService.getSingleProject(uuid, user.id);
+  }
 
-  @Patch('/:id')
-  async updateSingleProject() {}
+  @Patch('/:uuid')
+  async updateSingleProject(
+    @Param('uuid') uuid: string,
+    @Body() body: UpdateProjectDto,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.projectService.updateSingleProject(uuid, body, user.id);
+  }
 
-  @Delete('/:id')
-  async deleteSingleProject() {}
+  @Delete('/:uuid')
+  async deleteSingleProject(
+    @Param('uuid') uuid: string,
+    @CurrentUser() user: AuthenticatedUser,
+  ) {
+    return this.projectService.deleteProject(uuid, user.id);
+  }
 }
