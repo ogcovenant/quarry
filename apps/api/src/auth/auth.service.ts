@@ -1,12 +1,9 @@
-import {
-  ConflictException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
-import { UsersService } from 'src/users/users.service';
-import { AuthDto } from './dto/auth.dto';
-import { User } from 'src/users/entities/user.entity';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { UsersService } from '../users/users.service';
+import { User } from '../users/entities/user.entity';
+import { AuthDto } from './dto/auth.dto';
+import { AuthenticatedUser } from './interfaces/authenticated-user.interface';
 
 @Injectable()
 export class AuthService {
@@ -29,21 +26,21 @@ export class AuthService {
     user.password = hashedPassword;
     const savedUser = await this.userService.create(user);
 
-    const token = this.jwtService.sign({
-      id: savedUser.id,
-      email: savedUser.email,
-    });
-
-    return { message: 'User registered successfully', accessToken: token };
+    return {
+      message: 'User registered successfully',
+      accessToken: this.signToken(savedUser),
+    };
   }
 
-  async login(body: AuthDto) {
-    const { email, password } = body;
-
-    const existingUser =
-      await this.userService.findOneByEmailWithPassword(email);
+  async validateUser(
+    email: string,
+    password: string,
+  ): Promise<AuthenticatedUser | null> {
+    const existingUser = await this.userService.findOneByEmailWithPassword(
+      email.toLowerCase().trim(),
+    );
     if (!existingUser) {
-      throw new UnauthorizedException('Invalid credentials');
+      return null;
     }
 
     const isPasswordValid = await this.userService.comparePassword(
@@ -51,14 +48,33 @@ export class AuthService {
       existingUser.password,
     );
     if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
+      return null;
     }
 
-    const token = this.jwtService.sign({
-      id: existingUser.id,
-      email: existingUser.email,
-    });
+    return this.toAuthenticatedUser(existingUser);
+  }
 
-    return { message: 'Login successful', accessToken: token };
+  login(user: AuthenticatedUser) {
+    return {
+      message: 'Login successful',
+      accessToken: this.signToken(user),
+    };
+  }
+
+  private signToken(user: Pick<User, 'id' | 'email'>): string {
+    return this.jwtService.sign({
+      sub: user.id,
+      email: user.email,
+    });
+  }
+
+  private toAuthenticatedUser(
+    user: Pick<User, 'id' | 'uuid' | 'email'>,
+  ): AuthenticatedUser {
+    return {
+      id: user.id,
+      uuid: user.uuid,
+      email: user.email,
+    };
   }
 }

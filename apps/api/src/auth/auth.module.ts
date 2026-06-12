@@ -4,28 +4,26 @@ import { AuthService } from './auth.service';
 import { UsersModule } from '../users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { PassportModule } from '@nestjs/passport';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { LocalStrategy } from './strategies/local.strategy';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { getJwtSecret } from './jwt-secret';
 
 @Module({
   imports: [
     UsersModule,
+    PassportModule.register({ session: false }),
     JwtModule.registerAsync({
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const secret = configService.get<string>('JWT_SECRET');
-        const nodeEnv = configService.get<string>('NODE_ENV');
-
-        if (!secret && nodeEnv === 'production') {
-          throw new Error('JWT_SECRET is required in production');
-        }
-
-        return {
-          secret: secret ?? 'development-jwt-secret',
-          signOptions: { expiresIn: '7d' },
-        };
-      },
+      useFactory: (configService: ConfigService) => ({
+        secret: getJwtSecret(configService),
+        signOptions: { expiresIn: '7d' },
+      }),
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, LocalStrategy, JwtStrategy, JwtAuthGuard],
+  exports: [AuthService, JwtAuthGuard],
 })
 export class AuthModule {}
