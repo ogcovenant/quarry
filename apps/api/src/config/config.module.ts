@@ -11,7 +11,6 @@ export const AppModuleConfig = ConfigModule.forRoot({
     DB_USERNAME: joi.string().required(),
     DB_PASSWORD: joi.string().required(),
     DB_DATABASE: joi.string().required(),
-    GEMINI_API_KEY: joi.string().required(),
     JWT_SECRET: joi.string().optional(),
   }),
 });
