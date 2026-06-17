@@ -8,6 +8,7 @@ import { LoggerModule } from 'nestjs-pino';
 import { AppModuleConfig } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { ProjectsModule } from './projects/projects.module';
+import { NotesModule } from './notes/notes.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ProjectsModule } from './projects/projects.module';
     AuthModule,
     UsersModule,
     ProjectsModule,
+    NotesModule,
   ],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: ThrottlerGuard }, AppService],
