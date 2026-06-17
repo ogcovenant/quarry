@@ -1,3 +1,4 @@
+import { Notes } from 'src/notes/entities/note.entity';
 import { User } from '../../users/entities/user.entity';
 import {
   Column,
@@ -6,6 +7,7 @@ import {
   Generated,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -24,6 +26,9 @@ export class Projects {
 
   @Column({ type: 'text', nullable: true })
   description!: string | null;
+
+  @OneToMany(() => Notes, (note) => note.project)
+  notes!: Notes[];
 
   @ManyToOne(() => User, (user) => user.projects, {
     nullable: false,
