@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Notes } from './entities/note.entity';
 import { Repository } from 'typeorm';
+import { CreateNoteDto } from './dto/create-note.dto';
 
 @Injectable()
 export class NotesService {
@@ -10,7 +11,9 @@ export class NotesService {
     private readonly notesRepository: Repository<Notes>,
   ) {}
 
-  async createNote() {}
+  async createNote(body: CreateNoteDto, userId: number) {
+    const { title, content, projectId } = body;
+  }
 
   async getAllNotes() {}
 

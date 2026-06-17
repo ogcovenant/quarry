@@ -26,6 +26,7 @@
     "migration:show": "node --env-file=.env ./node_modules/typeorm/cli-ts-node-commonjs.js migration:show -d src/database/data-source.ts"
   },
   "dependencies": {
+    "@mysten/sui": "^2.18.0",
     "@nestjs/common": "^11.0.1",
     "@nestjs/config": "^4.0.4",
     "@nestjs/core": "^11.0.1",
