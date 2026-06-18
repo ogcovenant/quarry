@@ -4,7 +4,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { SuiService } from 'src/sui/sui.service';
-import { walrus, WalrusFile } from '@mysten/walrus';
+import { walrus, WalrusClient, WalrusFile } from '@mysten/walrus';
 import { StoredWalrusFile, WalrusWriteResult } from './walrus.interface';
 
 @Injectable()
@@ -21,16 +21,30 @@ export class WalrusService {
 
   async writeFile(blob: Blob): Promise<StoredWalrusFile> {
     try {
+      const storageEpochs = 1;
+
+      const systemState = await this.client.getLatestSuiSystemState();
+
+      const startEpoch = Number(systemState.epoch);
+      const expiryEpoch = startEpoch + storageEpochs;
+
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + storageEpochs);
+
       const result = (await this.client.walrus.writeBlob({
         blob,
         deletable: true,
-        epochs: 1,
+        epochs: storageEpochs,
         signer: this.keyPair,
       })) as WalrusWriteResult;
 
       return {
         blobId: result.blobId,
         blobObjectId: result.blobObject.id,
+        startEpoch,
+        expiryEpoch,
+        expiryDate,
+        storageEpochs,
       };
     } catch (err) {
       this.logger.error('An error occurred while writing file to Walrus', err);

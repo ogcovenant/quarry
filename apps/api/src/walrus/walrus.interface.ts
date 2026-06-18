@@ -8,4 +8,8 @@ export interface WalrusWriteResult {
 export interface StoredWalrusFile {
   blobId: string;
   blobObjectId: string;
+  startEpoch: number;
+  expiryEpoch: number;
+  expiryDate: Date;
+  storageEpochs: number;
 }
