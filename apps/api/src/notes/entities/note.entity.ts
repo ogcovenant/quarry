@@ -29,8 +29,11 @@ export class Notes {
   @Column({ type: 'text', nullable: false, name: 'walrus_blob_object_id' })
   blobObjectId!: string;
 
-  @Column({ type: 'timestamp', name: 'walrus_blob_expiry_date' })
-  expiryDate!: Date;
+  @Column({ type: 'bigint', name: 'walrus_start_epoch' })
+  startEpoch!: number;
+
+  @Column({ type: 'bigint', name: 'walrus_expiry_epoch' })
+  expiryEpoch!: number;
 
   @ManyToOne(() => Projects, (project) => project.notes, {
     nullable: true,
