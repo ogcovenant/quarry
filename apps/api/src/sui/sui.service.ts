@@ -5,8 +5,8 @@ import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class SuiService {
-  private readonly keypair;
-  private readonly client;
+  public keypair;
+  public client;
 
   constructor(private readonly configService: ConfigService) {
     this.keypair = Ed25519Keypair.fromSecretKey(
