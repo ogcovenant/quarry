@@ -21,15 +21,12 @@ export class WalrusService {
 
   async writeFile(blob: Blob): Promise<StoredWalrusFile> {
     try {
-      const storageEpochs = 1;
+      const storageEpochs = 30;
 
       const systemState = await this.client.getLatestSuiSystemState();
 
       const startEpoch = Number(systemState.epoch);
       const expiryEpoch = startEpoch + storageEpochs;
-
-      const expiryDate = new Date();
-      expiryDate.setDate(expiryDate.getDate() + storageEpochs);
 
       const result = (await this.client.walrus.writeBlob({
         blob,
@@ -43,7 +40,6 @@ export class WalrusService {
         blobObjectId: result.blobObject.id,
         startEpoch,
         expiryEpoch,
-        expiryDate,
         storageEpochs,
       };
     } catch (err) {
@@ -89,6 +85,28 @@ export class WalrusService {
       const tx = this.client.walrus.deleteBlobTransaction({
         blobObjectId,
         owner,
+      });
+
+      await this.client.signAndExecuteTransaction({
+        transaction: tx,
+        signer: this.keyPair,
+      });
+
+      return true;
+    } catch (err) {
+      this.logger.error(
+        'An error occurred while deleting file from Walrus',
+        err,
+      );
+      throw new InternalServerErrorException('An unexpected error occurred');
+    }
+  }
+
+  async extendBlobDuration(blobObjectId: string, epochs: number = 30) {
+    try {
+      const tx = this.client.walrus.extendBlobTransaction({
+        blobObjectId,
+        epochs,
       });
 
       await this.client.signAndExecuteTransaction({

@@ -10,6 +10,5 @@ export interface StoredWalrusFile {
   blobObjectId: string;
   startEpoch: number;
   expiryEpoch: number;
-  expiryDate: Date;
   storageEpochs: number;
 }
