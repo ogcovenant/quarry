@@ -26,6 +26,9 @@ export class Notes {
   @Column({ type: 'text', nullable: false, name: 'walrus_blob_id' })
   blobId!: string;
 
+  @Column({ type: 'text', nullable: false, name: 'walrus_blob_object_id' })
+  blobObjectId!: string;
+
   @Column({ type: 'timestamp', name: 'walrus_blob_expiry_date' })
   expiryDate!: Date;
 
