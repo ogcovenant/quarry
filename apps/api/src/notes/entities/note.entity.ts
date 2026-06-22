@@ -20,20 +20,11 @@ export class Notes {
   @Generated('uuid')
   uuid!: string;
 
-  @Column({ type: 'text', default: 'New Project' })
+  @Column({ type: 'text', default: 'New Note' })
   title!: string;
 
-  @Column({ type: 'text', nullable: false, name: 'walrus_blob_id' })
-  blobId!: string;
-
-  @Column({ type: 'text', nullable: false, name: 'walrus_blob_object_id' })
-  blobObjectId!: string;
-
-  @Column({ type: 'bigint', name: 'walrus_start_epoch' })
-  startEpoch!: number;
-
-  @Column({ type: 'bigint', name: 'walrus_expiry_epoch' })
-  expiryEpoch!: number;
+  @Column({ type: 'text', nullable: true })
+  content!: string | null;
 
   @ManyToOne(() => Projects, (project) => project.notes, {
     nullable: true,

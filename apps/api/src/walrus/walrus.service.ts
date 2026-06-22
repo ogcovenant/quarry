@@ -4,7 +4,7 @@ import {
   Logger,
 } from '@nestjs/common';
 import { SuiService } from 'src/sui/sui.service';
-import { walrus, WalrusClient, WalrusFile } from '@mysten/walrus';
+import { walrus } from '@mysten/walrus';
 import { StoredWalrusFile, WalrusWriteResult } from './walrus.interface';
 
 @Injectable()

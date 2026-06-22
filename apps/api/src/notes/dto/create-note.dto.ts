@@ -11,5 +11,5 @@ export class CreateNoteDto {
 
   @IsNotEmpty()
   @IsUUID()
-  projectId!: string;
+  projectUuid!: string;
 }
