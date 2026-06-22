@@ -140,4 +140,34 @@ export class NotesService {
       message: 'Note deleted successfully',
     };
   }
+
+  async fetchNotesByProject(
+    projectUUid: string,
+    userId: number,
+    paginationQuery: PaginationQueryDto,
+  ) {
+    const { page, limit } = paginationQuery;
+
+    const [notes, total] = await this.notesRepository.findAndCount({
+      where: {
+        project: {
+          uuid: projectUUid,
+        },
+        user: {
+          id: userId,
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        uuid: true,
+        title: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
+
+    return createPaginatedResponse(notes, total, paginationQuery);
+  }
 }

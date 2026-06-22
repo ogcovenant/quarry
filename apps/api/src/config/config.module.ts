@@ -12,7 +12,5 @@ export const AppModuleConfig = ConfigModule.forRoot({
     DB_PASSWORD: joi.string().required(),
     DB_DATABASE: joi.string().required(),
     JWT_SECRET: joi.string().optional(),
-    SUI_KEY: joi.string().required(),
-    SUI_NETWORK: joi.string().required(),
   }),
 });

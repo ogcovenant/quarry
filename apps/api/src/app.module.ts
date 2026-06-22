@@ -9,8 +9,6 @@ import { AppModuleConfig } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { ProjectsModule } from './projects/projects.module';
 import { NotesModule } from './notes/notes.module';
-import { WalrusModule } from './walrus/walrus.module';
-import { SuiModule } from './sui/sui.module';
 
 @Module({
   imports: [
@@ -35,8 +33,6 @@ import { SuiModule } from './sui/sui.module';
     UsersModule,
     ProjectsModule,
     NotesModule,
-    WalrusModule,
-    SuiModule,
   ],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: ThrottlerGuard }, AppService],

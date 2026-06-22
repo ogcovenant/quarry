@@ -16,11 +16,15 @@ import { CurrentUser } from 'src/auth/decorators/current-user.decorator';
 import { type AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 import { PaginationQueryDto } from '../common/pagination/dto/pagination-query.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { NotesService } from 'src/notes/notes.service';
 
 @UseGuards(JwtAuthGuard)
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectService: ProjectsService) {}
+  constructor(
+    private readonly projectService: ProjectsService,
+    private readonly notesService: NotesService,
+  ) {}
 
   @Post('/')
   async createProject(
@@ -61,5 +65,18 @@ export class ProjectsController {
     @CurrentUser() user: AuthenticatedUser,
   ) {
     return this.projectService.deleteProject(uuid, user.id);
+  }
+
+  @Get('/:uuid/notes')
+  async getNotesForProject(
+    @Param('uuid') projectUuid: string,
+    @CurrentUser() user: AuthenticatedUser,
+    @Query() paginationQuery: PaginationQueryDto,
+  ) {
+    return this.notesService.fetchNotesByProject(
+      projectUuid,
+      user.id,
+      paginationQuery,
+    );
   }
 }
