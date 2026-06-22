@@ -9,6 +9,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Source } from 'src/source/entities/source.entity';
 
 @Entity('users')
 export class User {
@@ -29,7 +30,10 @@ export class User {
   projects!: Projects[];
 
   @OneToMany(() => Notes, (note) => note.user)
-  notes!: Notes;
+  notes!: Notes[];
+
+  @OneToMany(() => Source, (source) => source.user)
+  sources!: Source[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

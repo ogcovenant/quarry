@@ -11,6 +11,7 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Source } from 'src/source/entities/source.entity';
 
 @Entity('projects')
 export class Projects {
@@ -29,6 +30,9 @@ export class Projects {
 
   @OneToMany(() => Notes, (note) => note.project)
   notes!: Notes[];
+
+  @OneToMany(() => Source, (source) => source.project)
+  sources!: Source[];
 
   @ManyToOne(() => User, (user) => user.projects, {
     nullable: false,

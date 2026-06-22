@@ -9,6 +9,7 @@ import { AppModuleConfig } from './config/config.module';
 import { DatabaseModule } from './database/database.module';
 import { ProjectsModule } from './projects/projects.module';
 import { NotesModule } from './notes/notes.module';
+import { SourceModule } from './source/source.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { NotesModule } from './notes/notes.module';
     UsersModule,
     ProjectsModule,
     NotesModule,
+    SourceModule,
   ],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: ThrottlerGuard }, AppService],
