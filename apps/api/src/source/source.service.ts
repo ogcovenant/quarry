@@ -1,9 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Source } from './entities/source.entity';
 import { Repository } from 'typeorm';
 import { UploadSourceDto } from './dto/upload-source.dto';
-import { S3Client, S3ClientConfig, PutObjectCommand } from '@aws-sdk/client-s3';
+import {
+  S3Client,
+  PutObjectCommand,
+  type S3ClientConfig,
+  DeleteObjectCommand,
+  GetObjectCommand,
+} from '@aws-sdk/client-s3';
 import { ConfigService } from '@nestjs/config';
 import { AuthenticatedUser } from 'src/auth/interfaces/authenticated-user.interface';
 import { ProjectsService } from 'src/projects/projects.service';
@@ -11,10 +21,12 @@ import { Projects } from 'src/projects/entities/project.entity';
 import { randomUUID } from 'crypto';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { User } from 'src/users/entities/user.entity';
+import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
+import { createPaginatedResponse } from 'src/common/pagination/utils/create-paginated-response';
 
 @Injectable()
 export class SourceService {
-  private s3;
+  private s3: S3Client;
 
   constructor(
     @InjectRepository(Source)
@@ -83,9 +95,89 @@ export class SourceService {
     );
 
     return {
-      uploadUrl,
-      sourceUuid: source.uuid,
-      storageKey,
+      url: uploadUrl,
+      uuid: source.uuid,
+      key: storageKey,
     };
+  }
+
+  async getAllSources(userId: number, query: PaginationQueryDto) {
+    const { page, limit } = query;
+
+    const [sources, total] = await this.sourceRepository.findAndCount({
+      where: {
+        user: {
+          id: userId,
+        },
+      },
+      skip: (page - 1) * limit,
+      take: limit,
+      select: {
+        id: true,
+        uuid: true,
+        filename: true,
+        mimeType: true,
+        storageKey: true,
+        createdAt: true,
+        updatedAt: true,
+        project: true,
+      },
+    });
+
+    return createPaginatedResponse(sources, total, query);
+  }
+
+  async getDownloadUrl(sourceUuid: string, userId: number) {
+    const source = await this.sourceRepository.findOne({
+      where: {
+        uuid: sourceUuid,
+        user: {
+          id: userId,
+        },
+      },
+    });
+
+    if (!source) {
+      throw new NotFoundException('Source not found');
+    }
+
+    const downloadUrl = await getSignedUrl(
+      this.s3,
+      new GetObjectCommand({
+        Bucket: this.configService.get<string>('CLOUDFLARE_BUCKET_NAME'),
+        Key: source.storageKey,
+      }),
+      { expiresIn: 3600 },
+    );
+
+    return {
+      url: downloadUrl,
+    };
+  }
+
+  async deleteSource(sourceUuid: string, userId: number) {
+    const source = await this.sourceRepository.findOne({
+      where: {
+        uuid: sourceUuid,
+        user: {
+          id: userId,
+        },
+      },
+    });
+
+    if (!source) {
+      throw new NotFoundException('Source not found');
+    }
+
+    await this.s3.send(
+      new DeleteObjectCommand({
+        Bucket: this.configService.get<string>('CLOUDFLARE_BUCKET_NAME'),
+        Key: source.storageKey,
+      }),
+    );
+
+    await this.sourceRepository.delete({ id: source.id });
+
+    return null;
   }
 }
