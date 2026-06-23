@@ -57,9 +57,9 @@ export class NotesController {
 
   @Delete('/:uuid')
   async deleteSingleNote(
-    @Param('uuid') projectUuid: string,
+    @Param('uuid') noteUUid: string,
     @CurrentUser() user: AuthenticatedUser,
   ) {
-    return this.notesService.deleteSingleNote(projectUuid, user.id);
+    return this.notesService.deleteSingleNote(noteUUid, user.id);
   }
 }

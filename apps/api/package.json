@@ -26,6 +26,8 @@
     "migration:show": "node --env-file=.env ./node_modules/typeorm/cli-ts-node-commonjs.js migration:show -d src/database/data-source.ts"
   },
   "dependencies": {
+    "@aws-sdk/client-s3": "^3.1073.0",
+    "@aws-sdk/s3-request-presigner": "^3.1075.0",
     "@mysten/sui": "^2.18.0",
     "@mysten/walrus": "^1.2.0",
     "@nestjs/common": "^11.0.1",

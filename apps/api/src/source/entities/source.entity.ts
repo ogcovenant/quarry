@@ -23,6 +23,12 @@ export class Source {
   @Column({ type: 'text', nullable: false })
   storageKey!: string;
 
+  @Column({ type: 'text', nullable: false })
+  filename!: string;
+
+  @Column({ type: 'text', nullable: false })
+  mimeType!: string;
+
   @ManyToOne(() => Projects, (project) => project.sources, {
     nullable: true,
   })

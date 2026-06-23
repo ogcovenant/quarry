@@ -12,5 +12,9 @@ export const AppModuleConfig = ConfigModule.forRoot({
     DB_PASSWORD: joi.string().required(),
     DB_DATABASE: joi.string().required(),
     JWT_SECRET: joi.string().optional(),
+    CLOUDFLARE_ACCOUNT_ID: joi.string().required(),
+    CLOUDFLARE_R2_ACCESS_KEY_ID: joi.string().required(),
+    CLOUDFLARE_R2_SECRET_ACCESS_KEY: joi.string().required(),
+    CLOUDFLARE_BUCKET_NAME: joi.string().required(),
   }),
 });
