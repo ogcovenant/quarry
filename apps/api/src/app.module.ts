@@ -10,6 +10,7 @@ import { DatabaseModule } from './database/database.module';
 import { ProjectsModule } from './projects/projects.module';
 import { NotesModule } from './notes/notes.module';
 import { SourceModule } from './source/source.module';
+import { MemoryModule } from './memory/memory.module';
 
 @Module({
   imports: [
@@ -35,6 +36,7 @@ import { SourceModule } from './source/source.module';
     ProjectsModule,
     NotesModule,
     SourceModule,
+    MemoryModule,
   ],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: ThrottlerGuard }, AppService],

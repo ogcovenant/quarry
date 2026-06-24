@@ -1,3 +1,4 @@
+import { Memory } from 'src/memory/entities/memory.entity';
 import { Projects } from 'src/projects/entities/project.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -7,6 +8,7 @@ import {
   Generated,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -28,6 +30,9 @@ export class Source {
 
   @Column({ type: 'text', nullable: false })
   mimeType!: string;
+
+  @OneToMany(() => Memory, (memory) => memory.source)
+  memories!: Memory[];
 
   @ManyToOne(() => Projects, (project) => project.sources, {
     nullable: true,

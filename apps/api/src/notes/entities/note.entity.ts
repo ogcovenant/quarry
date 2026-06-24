@@ -1,3 +1,4 @@
+import { Memory } from 'src/memory/entities/memory.entity';
 import { Projects } from 'src/projects/entities/project.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -6,6 +7,7 @@ import {
   Entity,
   Generated,
   JoinColumn,
+  ManyToMany,
   ManyToOne,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -25,6 +27,9 @@ export class Notes {
 
   @Column({ type: 'text', nullable: true })
   content!: string | null;
+
+  @ManyToMany(() => Memory, (memory) => memory.note)
+  memories!: Memory[];
 
   @ManyToOne(() => Projects, (project) => project.notes, {
     nullable: true,
