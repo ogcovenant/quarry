@@ -3,27 +3,12 @@ import { Memory } from './entities/memory.entity';
 import { DataSource, type FindOptionsWhere } from 'typeorm';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
 import { EmbeddingsService } from './services/embeddings.service';
-
-interface BaseIndexMemoryInput {
-  content: string;
-  contentVersion: string;
-  metadata: Record<string, unknown>;
-  projectId?: number;
-  userId: number;
-}
-
-interface IndexSourceMemoryInput extends BaseIndexMemoryInput {
-  sourceId: number;
-}
-
-interface IndexNoteMemoryInput extends BaseIndexMemoryInput {
-  noteId: number;
-}
-
-interface MemoryTarget {
-  noteId?: number | null;
-  sourceId?: number | null;
-}
+import {
+  BaseIndexMemoryInput,
+  IndexNoteMemoryInput,
+  IndexSourceMemoryInput,
+  MemoryTarget,
+} from './memory.interface';
 
 @Injectable()
 export class MemoryService {
@@ -107,4 +92,8 @@ export class MemoryService {
       });
     });
   }
+
+  async search() {}
+
+  async searchDocuments() {}
 }
