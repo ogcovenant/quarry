@@ -31,6 +31,7 @@
     "@langchain/core": "^1.2.1",
     "@langchain/google-genai": "^2.2.0",
     "@langchain/pgvector": "^0.1.0",
+    "@langchain/textsplitters": "^1.0.1",
     "@mysten/sui": "^2.18.0",
     "@mysten/walrus": "^1.2.0",
     "@nestjs/common": "^11.0.1",

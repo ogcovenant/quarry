@@ -1,4 +1,5 @@
 import { Notes } from 'src/notes/entities/note.entity';
+import { Projects } from 'src/projects/entities/project.entity';
 import { Source } from 'src/source/entities/source.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
@@ -31,6 +32,12 @@ export class Memory {
   })
   metadata!: Record<string, unknown>;
 
+  @Column({ name: 'content_version', type: 'text', nullable: true })
+  contentVersion!: string | null;
+
+  @Column({ name: 'source_id', type: 'integer', nullable: true })
+  sourceId!: number | null;
+
   @ManyToOne(() => Source, (source) => source.memories, {
     nullable: true,
     onDelete: 'CASCADE',
@@ -38,12 +45,28 @@ export class Memory {
   @JoinColumn({ name: 'source_id' })
   source?: Source;
 
+  @Column({ name: 'note_id', type: 'integer', nullable: true })
+  noteId!: number | null;
+
   @ManyToOne(() => Notes, (note) => note.memories, {
     nullable: true,
     onDelete: 'CASCADE',
   })
   @JoinColumn({ name: 'note_id' })
   note?: Notes;
+
+  @Column({ name: 'project_id', type: 'integer', nullable: true })
+  projectId!: number | null;
+
+  @ManyToOne(() => Projects, (project) => project.memories, {
+    nullable: true,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'project_id' })
+  project?: Projects;
+
+  @Column({ name: 'user_id', type: 'integer' })
+  userId!: number;
 
   @ManyToOne(() => User, (user) => user.memories, {
     nullable: false,

@@ -35,6 +35,9 @@ importers:
       '@langchain/pgvector':
         specifier: ^0.1.0
         version: 0.1.0(@langchain/core@1.2.1)
+      '@langchain/textsplitters':
+        specifier: ^1.0.1
+        version: 1.0.1(@langchain/core@1.2.1)
       '@mysten/sui':
         specifier: ^2.18.0
         version: 2.18.0(typescript@5.9.2)
@@ -1244,6 +1247,12 @@ packages:
 
   '@langchain/pgvector@0.1.0':
     resolution: {integrity: sha512-1/3ahOTdYwstTXq7mLZWl1ri6C7RL/vALywieVglBZ1iY8ujH15WvI7Afare/OPbMUOIcL26/KmFs2Sqy9MPYA==}
+    engines: {node: '>=20'}
+    peerDependencies:
+      '@langchain/core': ^1.0.0
+
+  '@langchain/textsplitters@1.0.1':
+    resolution: {integrity: sha512-rheJlB01iVtrOUzttscutRgLybPH9qR79EyzBEbf1u97ljWyuxQfCwIWK+SjoQTM9O8M7GGLLRBSYE26Jmcoww==}
     engines: {node: '>=20'}
     peerDependencies:
       '@langchain/core': ^1.0.0
@@ -6623,6 +6632,11 @@ snapshots:
       pg: 8.21.0
     transitivePeerDependencies:
       - pg-native
+
+  '@langchain/textsplitters@1.0.1(@langchain/core@1.2.1)':
+    dependencies:
+      '@langchain/core': 1.2.1
+      js-tiktoken: 1.0.21
 
   '@lukeed/csprng@1.1.0': {}
 

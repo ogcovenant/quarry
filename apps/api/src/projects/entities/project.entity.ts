@@ -12,6 +12,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Source } from 'src/source/entities/source.entity';
+import { Memory } from 'src/memory/entities/memory.entity';
 
 @Entity('projects')
 export class Projects {
@@ -33,6 +34,9 @@ export class Projects {
 
   @OneToMany(() => Source, (source) => source.project)
   sources!: Source[];
+
+  @OneToMany(() => Memory, (memory) => memory.project)
+  memories!: Memory[];
 
   @ManyToOne(() => User, (user) => user.projects, {
     nullable: false,
