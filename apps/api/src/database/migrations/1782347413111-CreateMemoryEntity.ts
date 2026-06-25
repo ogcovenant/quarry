@@ -11,6 +11,12 @@ export class CreateMemoryEntity1782347413111 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "memory" ADD "metadata" jsonb NOT NULL DEFAULT '{}'::jsonb`,
     );
+    await queryRunner.query(
+      `ALTER TABLE "memory" ADD "memory_type" text NOT NULL DEFAULT 'source'`,
+    );
+    await queryRunner.query(
+      `ALTER TABLE "memory" ADD "chunk_index" integer NOT NULL DEFAULT 0`,
+    );
     await queryRunner.query(`ALTER TABLE "memory" ADD "content_version" text`);
     await queryRunner.query(`ALTER TABLE "memory" ADD "source_id" integer`);
     await queryRunner.query(`ALTER TABLE "memory" ADD "note_id" integer`);
@@ -52,6 +58,8 @@ export class CreateMemoryEntity1782347413111 implements MigrationInterface {
     await queryRunner.query(
       `ALTER TABLE "memory" DROP COLUMN "content_version"`,
     );
+    await queryRunner.query(`ALTER TABLE "memory" DROP COLUMN "chunk_index"`);
+    await queryRunner.query(`ALTER TABLE "memory" DROP COLUMN "memory_type"`);
     await queryRunner.query(`ALTER TABLE "memory" DROP COLUMN "metadata"`);
     await queryRunner.query(`ALTER TABLE "memory" DROP COLUMN "embeddings"`);
   }

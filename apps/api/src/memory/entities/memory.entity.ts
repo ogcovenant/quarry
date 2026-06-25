@@ -32,6 +32,12 @@ export class Memory {
   })
   metadata!: Record<string, unknown>;
 
+  @Column({ name: 'memory_type', type: 'text' })
+  memoryType!: 'source' | 'note';
+
+  @Column({ name: 'chunk_index', type: 'integer' })
+  chunkIndex!: number;
+
   @Column({ name: 'content_version', type: 'text', nullable: true })
   contentVersion!: string | null;
 

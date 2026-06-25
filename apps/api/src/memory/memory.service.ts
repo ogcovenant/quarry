@@ -7,8 +7,12 @@ import {
   BaseIndexMemoryInput,
   IndexNoteMemoryInput,
   IndexSourceMemoryInput,
+  MemorySearchInput,
+  MemorySearchResult,
   MemoryTarget,
 } from './memory.interface';
+import pgvector from 'pgvector';
+import { Document } from '@langchain/core/documents';
 
 @Injectable()
 export class MemoryService {
@@ -29,6 +33,7 @@ export class MemoryService {
     return this.indexContent(
       input,
       {
+        memoryType: 'source',
         sourceId: input.sourceId,
         noteId: null,
       },
@@ -44,6 +49,7 @@ export class MemoryService {
     return this.indexContent(
       input,
       {
+        memoryType: 'note',
         sourceId: null,
         noteId: input.noteId,
       },
@@ -78,6 +84,8 @@ export class MemoryService {
           embeddings: embeddings[index],
           metadata: input.metadata,
           contentVersion: input.contentVersion,
+          memoryType: target.memoryType,
+          chunkIndex: index,
           sourceId: target.sourceId ?? null,
           noteId: target.noteId ?? null,
           projectId: input.projectId ?? null,
@@ -93,7 +101,85 @@ export class MemoryService {
     });
   }
 
-  async search() {}
+  async search(input: MemorySearchInput): Promise<MemorySearchResult[]> {
+    const limit = Math.min(Math.max(input.limit ?? 8, 1), 50);
 
-  async searchDocuments() {}
+    const queryEmbedding = await this.embeddingService.embedQuery(input.query);
+
+    const serializedQueryEmbedding = pgvector.toSql(queryEmbedding);
+
+    const queryBuilder = this.dataSource
+      .getRepository(Memory)
+      .createQueryBuilder('memory')
+      .addSelect('1 - (memory.embeddings <=> :embedding)', 'similarity')
+      .where('memory.user_id = :userId', { userId: input.userId })
+      .andWhere('memory.embeddings IS NOT NULL')
+      .setParameter('embedding', serializedQueryEmbedding);
+
+    if (input.projectId) {
+      queryBuilder.andWhere('memory.project_id = :projectId', {
+        projectId: input.projectId,
+      });
+    }
+
+    if (input.noteId) {
+      queryBuilder.andWhere('memory.note_id = :noteId', {
+        noteId: input.noteId,
+      });
+    }
+
+    if (input.sourceId) {
+      queryBuilder.andWhere('memory.source_id = :sourceId', {
+        sourceId: input.sourceId,
+      });
+    }
+
+    if (input.minimumSimilarity !== undefined) {
+      queryBuilder.andWhere(
+        '1 - (memory.embeddings <=> :embedding) >= :minimumSimilarity',
+        {
+          minimumSimilarity: input.minimumSimilarity,
+        },
+      );
+    }
+
+    const result = await queryBuilder
+      .orderBy('memory.embeddings <=> :embedding', 'ASC')
+      .take(limit)
+      .getRawAndEntities();
+
+    const rawRows = result.raw as Array<{ similarity?: number | string }>;
+
+    return result.entities.map((chunk, index) => ({
+      chunk,
+      similarity: Number(rawRows[index]?.similarity ?? 0),
+    }));
+  }
+
+  async searchDocuments(input: MemorySearchInput): Promise<Document[]> {
+    const results = await this.search(input);
+
+    return results.map(
+      ({ chunk, similarity }) =>
+        new Document({
+          pageContent: chunk.content,
+
+          metadata: {
+            ...chunk.metadata,
+
+            memoryId: chunk.id,
+
+            userId: chunk.userId,
+            projectId: chunk.projectId,
+            sourceId: chunk.sourceId,
+            noteId: chunk.noteId,
+            contentVersion: chunk.contentVersion,
+            memoryType: chunk.memoryType,
+            chunkIndex: chunk.chunkIndex,
+
+            similarity,
+          },
+        }),
+    );
+  }
 }
