@@ -1,5 +1,6 @@
 import { Notes } from 'src/notes/entities/note.entity';
 import { Source } from 'src/source/entities/source.entity';
+import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -24,6 +25,12 @@ export class Memory {
   @Column({ type: 'vector', length: 1536 })
   embeddings!: number[];
 
+  @Column({
+    type: 'jsonb',
+    default: () => "'{}'::jsonb",
+  })
+  metadata!: Record<string, unknown>;
+
   @ManyToOne(() => Source, (source) => source.memories, {
     nullable: true,
     onDelete: 'CASCADE',
@@ -37,6 +44,13 @@ export class Memory {
   })
   @JoinColumn({ name: 'note_id' })
   note?: Notes;
+
+  @ManyToOne(() => User, (user) => user.memories, {
+    nullable: false,
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;

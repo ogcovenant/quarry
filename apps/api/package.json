@@ -20,10 +20,10 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migration:generate": "node --env-file=.env ./node_modules/typeorm/cli-ts-node-commonjs.js migration:generate -d src/database/data-source.ts",
-    "migration:run": "node --env-file=.env ./node_modules/typeorm/cli-ts-node-commonjs.js migration:run -d src/database/data-source.ts",
-    "migration:revert": "node --env-file=.env ./node_modules/typeorm/cli-ts-node-commonjs.js migration:revert -d src/database/data-source.ts",
-    "migration:show": "node --env-file=.env ./node_modules/typeorm/cli-ts-node-commonjs.js migration:show -d src/database/data-source.ts"
+    "migration:generate": "node --env-file=.env -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:generate -d src/database/data-source.ts",
+    "migration:run": "node --env-file=.env -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:run -d src/database/data-source.ts",
+    "migration:revert": "node --env-file=.env -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:revert -d src/database/data-source.ts",
+    "migration:show": "node --env-file=.env -r tsconfig-paths/register ./node_modules/typeorm/cli-ts-node-commonjs.js migration:show -d src/database/data-source.ts"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1073.0",

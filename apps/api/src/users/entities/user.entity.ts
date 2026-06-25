@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Source } from 'src/source/entities/source.entity';
+import { Memory } from 'src/memory/entities/memory.entity';
 
 @Entity('users')
 export class User {
@@ -34,6 +35,9 @@ export class User {
 
   @OneToMany(() => Source, (source) => source.user)
   sources!: Source[];
+
+  @OneToMany(() => Memory, (memory) => memory.user)
+  memories!: Memory[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt!: Date;
