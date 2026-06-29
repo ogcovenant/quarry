@@ -2,13 +2,16 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import helmet from 'helmet';
 import compression from 'compression';
-import { Logger, ValidationPipe } from '@nestjs/common';
+import { INestApplication, Logger, ValidationPipe } from '@nestjs/common';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ResponseInterceptor } from './common/interceptors/response.interceptor';
 import { Logger as PinoLogger } from 'nestjs-pino';
 
+export let appInstance: INestApplication;
+
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  appInstance = app;
 
   app.useLogger(app.get(PinoLogger));
 
