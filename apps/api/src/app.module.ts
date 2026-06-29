@@ -11,6 +11,8 @@ import { ProjectsModule } from './projects/projects.module';
 import { NotesModule } from './notes/notes.module';
 import { SourceModule } from './source/source.module';
 import { MemoryModule } from './memory/memory.module';
+import { BullModule } from '@nestjs/bullmq';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -30,6 +32,17 @@ import { MemoryModule } from './memory/memory.module';
             ? { target: 'pino-pretty' }
             : undefined,
       },
+    }),
+    BullModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('REDIS_HOST'),
+          port: configService.get<number>('REDIS_PORT'),
+          password: configService.get<string>('REDIS_PASSWORD'),
+        },
+      }),
+      inject: [ConfigService],
     }),
     AuthModule,
     UsersModule,

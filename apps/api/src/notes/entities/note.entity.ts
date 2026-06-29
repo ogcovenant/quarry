@@ -7,8 +7,8 @@ import {
   Entity,
   Generated,
   JoinColumn,
-  ManyToMany,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -28,7 +28,7 @@ export class Notes {
   @Column({ type: 'text', nullable: true })
   content!: string | null;
 
-  @ManyToMany(() => Memory, (memory) => memory.note)
+  @OneToMany(() => Memory, (memory) => memory.note)
   memories!: Memory[];
 
   @ManyToOne(() => Projects, (project) => project.notes, {

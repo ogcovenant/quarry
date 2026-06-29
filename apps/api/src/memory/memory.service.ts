@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { Memory } from './entities/memory.entity';
 import { DataSource, type FindOptionsWhere } from 'typeorm';
 import { RecursiveCharacterTextSplitter } from '@langchain/textsplitters';
@@ -40,7 +40,6 @@ export class MemoryService {
       {
         userId: input.userId,
         sourceId: input.sourceId,
-        contentVersion: input.contentVersion,
       },
     );
   }
@@ -56,7 +55,6 @@ export class MemoryService {
       {
         userId: input.userId,
         noteId: input.noteId,
-        contentVersion: input.contentVersion,
       },
     );
   }
@@ -75,6 +73,12 @@ export class MemoryService {
     const chunks = await this.splitter.splitText(text);
     const embeddings = await this.embeddingService.embedDocuments(chunks);
 
+    if (embeddings.length !== chunks.length) {
+      throw new InternalServerErrorException(
+        `Embedding count mismatch: expected ${chunks.length}, got ${embeddings.length}`,
+      );
+    }
+
     return this.dataSource.transaction(async (manager) => {
       const memoryRepository = manager.getRepository(Memory);
 
@@ -82,8 +86,6 @@ export class MemoryService {
         memoryRepository.create({
           content,
           embeddings: embeddings[index],
-          metadata: input.metadata,
-          contentVersion: input.contentVersion,
           memoryType: target.memoryType,
           chunkIndex: index,
           sourceId: target.sourceId ?? null,
@@ -165,8 +167,6 @@ export class MemoryService {
           pageContent: chunk.content,
 
           metadata: {
-            ...chunk.metadata,
-
             memoryId: chunk.id,
 
             userId: chunk.userId,

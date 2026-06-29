@@ -26,12 +26,6 @@ export class Memory {
   @Column({ type: 'vector', length: 1536 })
   embeddings!: number[];
 
-  @Column({
-    type: 'jsonb',
-    default: () => "'{}'::jsonb",
-  })
-  metadata!: Record<string, unknown>;
-
   @Column({ name: 'memory_type', type: 'text' })
   memoryType!: 'source' | 'note';
 

@@ -2,8 +2,6 @@ import { Memory } from './entities/memory.entity';
 
 export interface BaseIndexMemoryInput {
   content: string;
-  contentVersion: string;
-  metadata: Record<string, unknown>;
   projectId?: number;
   userId: number;
 }
@@ -40,3 +38,15 @@ export interface MemorySearchResult {
   chunk: Memory;
   similarity: number;
 }
+
+export type IndexMemoryQueueInput =
+  | {
+      memoryType: 'source';
+      sourceId: number;
+      noteId?: never;
+    }
+  | {
+      memoryType: 'note';
+      noteId: number;
+      sourceId?: never;
+    };

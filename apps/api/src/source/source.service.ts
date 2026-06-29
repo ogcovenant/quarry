@@ -10,7 +10,6 @@ import { UploadSourceDto } from './dto/upload-source.dto';
 import {
   S3Client,
   PutObjectCommand,
-  type S3ClientConfig,
   DeleteObjectCommand,
   GetObjectCommand,
 } from '@aws-sdk/client-s3';
@@ -23,6 +22,8 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { User } from 'src/users/entities/user.entity';
 import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
 import { createPaginatedResponse } from 'src/common/pagination/utils/create-paginated-response';
+import { PDFParse } from 'pdf-parse';
+import * as mammoth from 'mammoth';
 
 @Injectable()
 export class SourceService {
@@ -179,5 +180,115 @@ export class SourceService {
     await this.sourceRepository.delete({ id: source.id });
 
     return null;
+  }
+
+  async fetchSourceById(sourceId: number) {
+    return this.sourceRepository.findOne({
+      where: {
+        id: sourceId,
+      },
+      relations: {
+        project: true,
+        user: true,
+      },
+    });
+  }
+
+  async extractContentFromSource(source: Source): Promise<string> {
+    const { storageKey } = source;
+    const { Body } = await this.s3.send(
+      new GetObjectCommand({
+        Bucket: this.configService.get<string>('CLOUDFLARE_BUCKET_NAME'),
+        Key: storageKey,
+      }),
+    );
+
+    if (!Body) {
+      throw new BadRequestException('Source file is empty');
+    }
+
+    const buffer = Buffer.from(await Body.transformToByteArray());
+
+    if (this.isPdfSource(source)) {
+      return this.extractPdfText(buffer);
+    }
+
+    if (this.isDocxSource(source)) {
+      return this.extractDocxText(buffer);
+    }
+
+    if (this.isTextSource(source)) {
+      return buffer.toString('utf-8');
+    }
+
+    throw new BadRequestException(
+      `Unsupported source file type: ${source.mimeType}`,
+    );
+  }
+
+  private async extractPdfText(buffer: Buffer): Promise<string> {
+    const parser = new PDFParse({ data: new Uint8Array(buffer) });
+
+    try {
+      const result = await parser.getText();
+      return result.text;
+    } finally {
+      await parser.destroy();
+    }
+  }
+
+  private async extractDocxText(buffer: Buffer): Promise<string> {
+    const result = await mammoth.extractRawText({ buffer });
+    return result.value;
+  }
+
+  private isPdfSource(source: Source) {
+    return (
+      source.mimeType === 'application/pdf' ||
+      this.getSourceExtension(source) === '.pdf'
+    );
+  }
+
+  private isDocxSource(source: Source) {
+    return (
+      source.mimeType ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ||
+      this.getSourceExtension(source) === '.docx'
+    );
+  }
+
+  private isTextSource(source: Source) {
+    const extension = this.getSourceExtension(source);
+
+    return (
+      source.mimeType.startsWith('text/') ||
+      [
+        'application/json',
+        'application/xml',
+        'application/x-ndjson',
+        'application/yaml',
+      ].includes(source.mimeType) ||
+      [
+        '.txt',
+        '.md',
+        '.markdown',
+        '.csv',
+        '.json',
+        '.xml',
+        '.yaml',
+        '.yml',
+      ].includes(extension)
+    );
+  }
+
+  private getSourceExtension(source: Source) {
+    const filename = source.filename.toLowerCase();
+    const extensionStartIndex = filename.lastIndexOf('.');
+
+    if (extensionStartIndex === -1) {
+      return '';
+    }
+
+    return filename.slice(extensionStartIndex);
   }
 }

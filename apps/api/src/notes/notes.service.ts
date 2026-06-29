@@ -12,6 +12,7 @@ import { User } from 'src/users/entities/user.entity';
 import { PaginationQueryDto } from 'src/common/pagination/dto/pagination-query.dto';
 import { createPaginatedResponse } from 'src/common/pagination/utils/create-paginated-response';
 import { UpdateNoteDto } from './dto/update-note.dto';
+import { MemoryQueueService } from 'src/memory/memory-queue.service';
 
 @Injectable()
 export class NotesService {
@@ -19,6 +20,7 @@ export class NotesService {
     @InjectRepository(Notes)
     private readonly notesRepository: Repository<Notes>,
     private readonly projectsService: ProjectsService,
+    private readonly memoryQueueService: MemoryQueueService,
   ) {}
 
   async createNote(body: CreateNoteDto, userId: number) {
@@ -40,7 +42,14 @@ export class NotesService {
     note.project = project;
     note.user = { id: userId } as User;
 
-    const { project: _, ...savedNote } = await this.notesRepository.save(note);
+    const savedNote = await this.notesRepository.save(note);
+
+    if (savedNote.content?.trim()) {
+      await this.memoryQueueService.indexMemory({
+        memoryType: 'note',
+        noteId: savedNote.id,
+      });
+    }
 
     return {
       ...savedNote,
@@ -115,7 +124,16 @@ export class NotesService {
       note.content = content;
     }
 
-    return this.notesRepository.save(note);
+    const savedNote = await this.notesRepository.save(note);
+
+    if (content !== undefined && savedNote.content?.trim()) {
+      await this.memoryQueueService.indexMemory({
+        memoryType: 'note',
+        noteId: savedNote.id,
+      });
+    }
+
+    return savedNote;
   }
 
   async deleteSingleNote(noteUUid: string, userId: number) {
@@ -169,5 +187,19 @@ export class NotesService {
     });
 
     return createPaginatedResponse(notes, total, paginationQuery);
+  }
+
+  async fetchNoteById(noteId: number) {
+    const note = await this.notesRepository.findOne({
+      where: {
+        id: noteId,
+      },
+      relations: {
+        project: true,
+        user: true,
+      },
+    });
+
+    return note;
   }
 }
