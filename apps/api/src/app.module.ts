@@ -13,6 +13,7 @@ import { SourceModule } from './source/source.module';
 import { MemoryModule } from './memory/memory.module';
 import { BullModule } from '@nestjs/bullmq';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ChatModule } from './chat/chat.module';
 
 @Module({
   imports: [
@@ -50,6 +51,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     NotesModule,
     SourceModule,
     MemoryModule,
+    ChatModule,
   ],
   controllers: [AppController],
   providers: [{ provide: 'APP_GUARD', useClass: ThrottlerGuard }, AppService],
